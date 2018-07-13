@@ -12,10 +12,10 @@ aws_az: "us-east-1e"
 # VPC Information
 vpc_name: "helm-ceph"
 vpc_cidr_block: "10.0.0.0/16"	
-#vpc_subnet_id: "subnet-7b950e1e"
 
 # Subnets
-public_subnet_1_cidr: "10.0.1.0/24"
+private_subnet_1_cidr: "10.0.1.0/24"
+private_subnet_1_name: "private_subnet_1"
 sg_ip_range: "0.0.0.0/0"
 security_group_name: "helm-ceph"
 
@@ -35,3 +35,5 @@ ec2_instance_details:
     - { name: 'worker1', type: 'worker', group: 'worker' }
     - { name: 'worker2', type: 'worker', group: 'worker' }
     - { name: 'worker3', type: 'worker', group: 'worker' }
+
+termination_protection: "no"

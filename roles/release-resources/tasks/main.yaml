@@ -1,0 +1,41 @@
+---
+- name:               Get VPC ID
+  ec2_vpc_net:
+    name:             "{{ vpc_name }}"
+    cidr_block:       "{{ vpc_cidr_block }}"
+    region:           "{{ aws_region }}"
+  register: my_vpc
+
+- name:               Set VPC ID in variable
+  set_fact:
+    vpc_id:           "{{ my_vpc.vpc.id }}"
+
+- ec2_vpc_subnet_facts:
+    region: "{{ aws_region }}"
+    filters:
+      vpc-id: "{{ vpc_id }}" 
+  register: private_subnet_facts
+
+- set_fact:
+    private_subnet_id: "{{ private_subnet_facts.subnets|map(attribute='id')|list }}"
+
+- name:               Get SG ID
+  ec2_group:
+    name:             "{{ security_group_name }}"
+    description:      "{{ security_group_name }}"
+    vpc_id:           "{{ vpc_id }}"
+    region:           "{{ aws_region }}"
+  register: my_security_group
+
+- name:               Set Security Group ID in variable
+  set_fact:
+    sg_id:           "{{ my_security_group.group_id }}"
+
+- name: Include ec2 yaml
+  include: ../../../roles/ec2/tasks/main.yaml 
+
+- name: Delete VPC
+  ec2_vpc:
+    state: "{{ state }}"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ aws_region }}"
