@@ -1,0 +1,7 @@
+---
+- hosts: local
+  connection: local
+  gather_facts: false
+  roles:
+    - { role: vpc, tags: [ 'vpc' ] }
+    - { role: ec2, tags: [ 'ec2' ] }
